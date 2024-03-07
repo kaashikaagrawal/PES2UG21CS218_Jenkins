@@ -1,48 +1,29 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
-                script {
-                    // Define the Maven tool
-                    def mvnHome = tool name: 'Maven', type: 'maven'
-                    // Use the defined Maven tool
-                    sh "${mvnHome}/bin/mvn clean install"
-                }
-                echo 'Build stage Successful'
+              build 'PES2UG21CS309-1'
+              sh 'g++ main.cpp -o output'
             }
         }
         stage('Test') {
             steps {
-                script {
-                    // Define the Maven tool
-                    def mvnHome = tool name: 'Maven', type: 'maven'
-                    // Use the defined Maven tool
-                    sh "${mvnHome}/bin/mvn test"
-                }
-                echo 'Test stage Successful'
-                post {
-                    always {
-                        junit 'target/surefire-reports/*.xml'
-                    }
-                }
+                sh './output'
+            
             }
         }
         stage('Deploy') {
             steps {
-                script {
-                    // Define the Maven tool
-                    def mvnHome = tool name: 'Maven', type: 'maven'
-                    // Use the defined Maven tool
-                    sh "${mvnHome}/bin/mvn deploy"
-                }
-                echo 'Deployment Successful'
+              eco 'Deployed!'
             }
         }
     }
+
     post {
         failure {
-            echo 'Pipeline Failed'
+            error 'Pipeline Failed'
         }
     }
 }
