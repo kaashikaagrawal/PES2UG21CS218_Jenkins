@@ -3,31 +3,46 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                script {
+                    // Define the Maven tool
+                    def mvnHome = tool name: 'Maven', type: 'maven'
+                    // Use the defined Maven tool
+                    sh "${mvnHome}/bin/mvn clean install"
+                }
                 echo 'Build stage Successful'
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                script {
+                    // Define the Maven tool
+                    def mvnHome = tool name: 'Maven', type: 'maven'
+                    // Use the defined Maven tool
+                    sh "${mvnHome}/bin/mvn test"
+                }
                 echo 'Test stage Successful'
-                post{
-                  always{
-                    junit 'target/surefire-reports/*.xml'
-                  }
+                post {
+                    always {
+                        junit 'target/surefire-reports/*.xml'
+                    }
                 }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'mvn deploy'
+                script {
+                    // Define the Maven tool
+                    def mvnHome = tool name: 'Maven', type: 'maven'
+                    // Use the defined Maven tool
+                    sh "${mvnHome}/bin/mvn deploy"
+                }
                 echo 'Deployment Successful'
             }
         }
     }
-    post{
-        failure{
+    post {
+        failure {
             echo 'Pipeline Failed'
-          }
-      }
+        }
+    }
 }
